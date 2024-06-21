@@ -1,9 +1,32 @@
+from sqlalchemy import create_engine, Column, Integer, String, DateTime
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from datetime import datetime
+import pytz
+
 from signalrcore.hub_connection_builder import HubConnectionBuilder
 import logging
 import requests
 import json
 import time
 
+# SQLAlchemy base
+Base = declarative_base()
+
+# Définition des modèles
+class HVAC_Temperature(Base):
+    __tablename__ = 'HVAC_Temperature'
+    
+    id = Column(Integer, primary_key=True, index=True)
+    timestamp = Column(DateTime, index=True)
+    temperature = Column(String, index=True)
+    
+class HVAC_Events(Base):
+    __tablename__ = 'HVAC_Events'
+    
+    id = Column(Integer, primary_key=True, index=True)
+    timestamp = Column(DateTime, index=True)
+    event = Column(String, index=True)
 
 class App:
     def __init__(self):
@@ -16,6 +39,10 @@ class App:
         self.T_MAX = None  # Setup your max temperature here
         self.T_MIN = None  # Setup your min temperature here
         self.DATABASE_URL = None  # Setup your database here
+        
+        # Initialize database connection
+        self.engine = create_engine(self.DATABASE_URL)
+        self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
 
     def __del__(self):
         if self._hub_connection != None:
@@ -78,12 +105,34 @@ class App:
 
     def save_event_to_database(self, timestamp, temperature):
         """Save sensor data into database."""
+        session = self.SessionLocal()
         try:
-            # To implement
-            pass
-        except requests.exceptions.RequestException as e:
-            # To implement
-            pass
+            # Convert timestamp to datetime object
+            edt = pytz.timezone('US/Eastern')
+            timestamp_temp = datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S').astimezone(edt)
+            timestamp_events = datetime.now().astimezone(edt).strftime('%Y-%m-%d %H:%M:%S')
+            
+            # Save temperature data (Table "HVAC_Temperature")
+            temp_record = HVAC_Temperature(timestamp=timestamp_temp, temperature=str(temperature))
+            session.add(temp_record)
+            
+            # Save event data (Table "HVAC_Events")
+            if float(temperature) >= float(self.T_MAX):
+                event_record = HVAC_Events(timestamp=timestamp_events, event="TurnOnAc")
+            elif float(temperature) <= float(self.T_MIN):
+                event_record = HVAC_Events(timestamp=timestamp_events, event="TurnOnHeater")
+            else:
+                event_record = HVAC_Events(timestamp=timestamp_events, event="NoAction")
+            session.add(event_record)
+            
+            # Commit the transaction
+            session.commit()
+            
+        except Exception as e:
+            session.rollback()
+            print(f"Error saving to database: {e}")
+        finally:
+            session.close()
 
 
 if __name__ == "__main__":
