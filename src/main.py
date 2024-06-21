@@ -3,7 +3,13 @@ import logging
 import requests
 import json
 import time
+from dotenv import load_dotenv
+import os
 
+# Charger les variables d'environnement depuis le fichier .env
+load_dotenv()
+
+print(os.getenv('HOST'))
 
 class App:
     def __init__(self):
@@ -11,11 +17,11 @@ class App:
         self.TICKS = 10
 
         # To be configured by your team
-        self.HOST = None  # Setup your host here
-        self.TOKEN = None  # Setup your token here
-        self.T_MAX = None  # Setup your max temperature here
-        self.T_MIN = None  # Setup your min temperature here
-        self.DATABASE_URL = None  # Setup your database here
+        self.HOST = os.getenv('HOST')
+        self.TOKEN = os.getenv('TOKEN')
+        self.T_MAX = 30  # Setup your max temperature here
+        self.T_MIN = 18  # Setup your min temperature here
+        self.DATABASE_URL = os.getenv('DATABASE_URL') 
 
     def __del__(self):
         if self._hub_connection != None:
