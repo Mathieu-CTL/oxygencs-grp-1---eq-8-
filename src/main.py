@@ -9,6 +9,8 @@ import logging
 import requests
 import json
 import time
+from dotenv import load_dotenv
+import os
 
 # SQLAlchemy base
 Base = declarative_base()
@@ -28,21 +30,24 @@ class HVAC_Events(Base):
     timestamp = Column(DateTime, index=True)
     event = Column(String, index=True)
 
+# Charger les variables d'environnement depuis le fichier .env
+load_dotenv()
+
 class App:
     def __init__(self):
         self._hub_connection = None
         self.TICKS = 10
 
-        # To be configured by your team
-        self.HOST = None  # Setup your host here
-        self.TOKEN = None  # Setup your token here
-        self.T_MAX = None  # Setup your max temperature here
-        self.T_MIN = None  # Setup your min temperature here
-        self.DATABASE_URL = None  # Setup your database here
-        
         # Initialize database connection
         self.engine = create_engine(self.DATABASE_URL)
         self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
+
+        # To be configured by your team
+        self.HOST = os.getenv('HOST')
+        self.TOKEN = os.getenv('TOKEN')
+        self.T_MAX = 30  # Setup your max temperature here
+        self.T_MIN = 18  # Setup your min temperature here
+        self.DATABASE_URL = os.getenv('DATABASE_URL') 
 
     def __del__(self):
         if self._hub_connection != None:
