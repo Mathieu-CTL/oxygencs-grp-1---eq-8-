@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 import pytz
+from dateutil.parser import parse as parse_date
 
 from signalrcore.hub_connection_builder import HubConnectionBuilder
 import logging
@@ -38,16 +39,16 @@ class App:
         self._hub_connection = None
         self.TICKS = 10
 
-        # Initialize database connection
-        self.engine = create_engine(self.DATABASE_URL)
-        self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
-
         # To be configured by your team
         self.HOST = os.getenv('HOST')
         self.TOKEN = os.getenv('TOKEN')
         self.T_MAX = 30  # Setup your max temperature here
         self.T_MIN = 18  # Setup your min temperature here
         self.DATABASE_URL = os.getenv('DATABASE_URL') 
+        
+        # Initialize database connection
+        self.engine = create_engine(self.DATABASE_URL)
+        self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
 
     def __del__(self):
         if self._hub_connection != None:
@@ -114,7 +115,7 @@ class App:
         try:
             # Convert timestamp to datetime object
             edt = pytz.timezone('US/Eastern')
-            timestamp_temp = datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S').astimezone(edt)
+            timestamp_temp = parse_date(timestamp).astimezone(edt).strftime('%Y-%m-%d %H:%M:%S')
             timestamp_events = datetime.now().astimezone(edt).strftime('%Y-%m-%d %H:%M:%S')
             
             # Save temperature data (Table "HVAC_Temperature")
