@@ -16,23 +16,27 @@ import os
 # SQLAlchemy base
 Base = declarative_base()
 
+
 # Définition des modèles
 class HVAC_Temperature(Base):
-    __tablename__ = 'HVAC_Temperature'
-    
+    __tablename__ = "HVAC_Temperature"
+
     id = Column(Integer, primary_key=True, index=True)
     timestamp = Column(DateTime, index=True)
     temperature = Column(String, index=True)
-    
+
+
 class HVAC_Events(Base):
-    __tablename__ = 'HVAC_Events'
-    
+    __tablename__ = "HVAC_Events"
+
     id = Column(Integer, primary_key=True, index=True)
     timestamp = Column(DateTime, index=True)
     event = Column(String, index=True)
 
+
 # Charger les variables d'environnement depuis le fichier .env
 load_dotenv()
+
 
 class App:
     def __init__(self):
@@ -40,15 +44,17 @@ class App:
         self.TICKS = 10
 
         # To be configured by your team
-        self.HOST = os.getenv('HOST')
-        self.TOKEN = os.getenv('TOKEN')
+        self.HOST = os.getenv("HOST")
+        self.TOKEN = os.getenv("TOKEN")
         self.T_MAX = 30  # Setup your max temperature here
         self.T_MIN = 18  # Setup your min temperature here
-        self.DATABASE_URL = os.getenv('DATABASE_URL') 
-        
+        self.DATABASE_URL = os.getenv("DATABASE_URL")
+
         # Initialize database connection
         self.engine = create_engine(self.DATABASE_URL)
-        self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
+        self.SessionLocal = sessionmaker(
+            autocommit=False, autoflush=False, bind=self.engine
+        )
 
     def __del__(self):
         if self._hub_connection != None:
@@ -114,26 +120,34 @@ class App:
         session = self.SessionLocal()
         try:
             # Convert timestamp to datetime object
-            edt = pytz.timezone('US/Eastern')
-            timestamp_temp = parse_date(timestamp).astimezone(edt).strftime('%Y-%m-%d %H:%M:%S')
-            timestamp_events = datetime.now().astimezone(edt).strftime('%Y-%m-%d %H:%M:%S')
-            
+            edt = pytz.timezone("US/Eastern")
+            timestamp_temp = (
+                parse_date(timestamp).astimezone(edt).strftime("%Y-%m-%d %H:%M:%S")
+            )
+            timestamp_events = (
+                datetime.now().astimezone(edt).strftime("%Y-%m-%d %H:%M:%S")
+            )
+
             # Save temperature data (Table "HVAC_Temperature")
-            temp_record = HVAC_Temperature(timestamp=timestamp_temp, temperature=str(temperature))
+            temp_record = HVAC_Temperature(
+                timestamp=timestamp_temp, temperature=str(temperature)
+            )
             session.add(temp_record)
-            
+
             # Save event data (Table "HVAC_Events")
             if float(temperature) >= float(self.T_MAX):
                 event_record = HVAC_Events(timestamp=timestamp_events, event="TurnOnAc")
             elif float(temperature) <= float(self.T_MIN):
-                event_record = HVAC_Events(timestamp=timestamp_events, event="TurnOnHeater")
+                event_record = HVAC_Events(
+                    timestamp=timestamp_events, event="TurnOnHeater"
+                )
             else:
                 event_record = HVAC_Events(timestamp=timestamp_events, event="NoAction")
             session.add(event_record)
-            
+
             # Commit the transaction
             session.commit()
-            
+
         except Exception as e:
             session.rollback()
             print(f"Error saving to database: {e}")
