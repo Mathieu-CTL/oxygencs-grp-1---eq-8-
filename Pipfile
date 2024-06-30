@@ -6,6 +6,11 @@ name = "pypi"
 [packages]
 requests = "*"
 signalrcore = "*"
+sqlalchemy = "*"
+python-dotenv = "*"
+pytz = "*"
+python-dateutil = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
