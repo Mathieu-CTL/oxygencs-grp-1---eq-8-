@@ -119,14 +119,16 @@ class App:
         """Save sensor data into database."""
         session = self.SessionLocal()
         try:
-            # Convert timestamp to datetime object
+            # Convert timestamp to the correct timezone
             edt = pytz.timezone("US/Eastern")
-            timestamp_temp = (
+
+            timestamp_str = (
                 parse_date(timestamp).astimezone(edt).strftime("%Y-%m-%d %H:%M:%S")
             )
-            timestamp_events = (
-                datetime.now().astimezone(edt).strftime("%Y-%m-%d %H:%M:%S")
-            )
+            
+            timestamp_temp = datetime.strptime(timestamp_str, "%Y-%m-%d %H:%M:%S")
+
+            timestamp_events = datetime.now().astimezone(edt)
 
             # Save temperature data (Table "HVAC_Temperature")
             temp_record = HVAC_Temperature(
@@ -147,10 +149,9 @@ class App:
 
             # Commit the transaction
             session.commit()
-
         except Exception as e:
-            session.rollback()
             print(f"Error saving to database: {e}")
+            session.rollback()
         finally:
             session.close()
 

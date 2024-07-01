@@ -19,5 +19,5 @@ python_version = "3.8"
 
 [scripts]
 start = "python src/main.py"
-test = "# To implement"
-lint = "# To implement"
+test = "python test/test.py"
+lint = "flake8 src"
