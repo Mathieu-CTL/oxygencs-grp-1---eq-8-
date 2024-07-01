@@ -2,12 +2,13 @@ import unittest
 from unittest.mock import MagicMock
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from datetime import datetime
+import pytz
 import sys
 import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from src.main import App, Base, HVAC_Temperature, HVAC_Events
-
 
 class TestUnitaire(unittest.TestCase):
     def setUp(self):
@@ -39,7 +40,6 @@ class TestUnitaire(unittest.TestCase):
 
         self.app.send_action_to_hvac.assert_not_called()
 
-
 class TestIntegration(unittest.TestCase):
     def setUp(self):
         # Setup in-memory SQLite database for testing
@@ -52,26 +52,26 @@ class TestIntegration(unittest.TestCase):
         self.app.SessionLocal = self.SessionLocal
 
     def test_save_event_to_database(self):
-        # Test saving event to database
-        timestamp = "2024-06-30T12:00:00Z"
-        temperature = 28.5
+        # Simulate the timestamp as a string in the expected format
+        edt = pytz.timezone("US/Eastern")
+        timestamp = datetime.now().astimezone(edt).strftime("%Y-%m-%d %H:%M:%S")
+        temperature = "28.5"
 
         self.app.save_event_to_database(timestamp, temperature)
 
-        # Verifier si les donnee sont sauvegardees dans les tables HVAC_Temperature et HVAC_Events
         session = self.SessionLocal()
-        temp_data = (
-            session.query(HVAC_Temperature).filter_by(temperature="28.5").first()
-        )
-        event_data = session.query(HVAC_Events).filter_by(event="NoAction").first()
-
-        self.assertIsNotNone(temp_data)
-        self.assertIsNotNone(event_data)
+        try:
+            temp_data = session.query(HVAC_Temperature).filter_by(temperature="28.5").first()
+            event_data = session.query(HVAC_Events).filter_by(event="NoAction").first()
+            
+            self.assertIsNotNone(temp_data)
+            self.assertIsNotNone(event_data)
+        finally:
+            session.close()
 
     def tearDown(self):
         # Clean up
         Base.metadata.drop_all(self.engine)
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -119,14 +119,18 @@ class App:
         """Save sensor data into database."""
         session = self.SessionLocal()
         try:
-            # Convert timestamp to datetime object
+            # Convert timestamp to the correct timezone
             edt = pytz.timezone("US/Eastern")
-            timestamp_temp = (
-                parse_date(timestamp).astimezone(edt).strftime("%Y-%m-%d %H:%M:%S")
-            )
-            timestamp_events = (
-                datetime.now().astimezone(edt).strftime("%Y-%m-%d %H:%M:%S")
-            )
+
+            # Check if timestamp is a string and convert it to datetime if necessary
+            if isinstance(timestamp, str):
+                timestamp_temp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").astimezone(edt)
+            elif isinstance(timestamp, datetime):
+                timestamp_temp = timestamp.astimezone(edt)
+            else:
+                raise ValueError("Invalid timestamp format")
+
+            timestamp_events = datetime.now().astimezone(edt)
 
             # Save temperature data (Table "HVAC_Temperature")
             temp_record = HVAC_Temperature(
@@ -138,19 +142,16 @@ class App:
             if float(temperature) >= float(self.T_MAX):
                 event_record = HVAC_Events(timestamp=timestamp_events, event="TurnOnAc")
             elif float(temperature) <= float(self.T_MIN):
-                event_record = HVAC_Events(
-                    timestamp=timestamp_events, event="TurnOnHeater"
-                )
+                event_record = HVAC_Events(timestamp=timestamp_events, event="TurnOnHeater")
             else:
                 event_record = HVAC_Events(timestamp=timestamp_events, event="NoAction")
             session.add(event_record)
 
             # Commit the transaction
             session.commit()
-
         except Exception as e:
-            session.rollback()
             print(f"Error saving to database: {e}")
+            session.rollback()
         finally:
             session.close()
 
