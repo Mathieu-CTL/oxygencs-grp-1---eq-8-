@@ -18,8 +18,8 @@ RUN pipenv install --deploy --ignore-pipfile
 # Étape finale
 FROM python:3.8-alpine
 
-# Install only runtime dependencies
-RUN apk add --no-cache libffi
+# Installer pipenv dans l'image finale
+RUN pip install --no-cache-dir pipenv
 
 WORKDIR /app
 
