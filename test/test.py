@@ -19,7 +19,7 @@ class TestUnitaire(unittest.TestCase):
         self.app.T_MAX = 30
         self.app.send_action_to_hvac = MagicMock()
 
-        self.app.take_action(31)  # Simulate temperature above T_MAX
+        self.app.take_action(31)
 
         self.app.send_action_to_hvac.assert_called_once_with("TurnOnAc")
 
@@ -28,7 +28,7 @@ class TestUnitaire(unittest.TestCase):
         self.app.T_MIN = 18
         self.app.send_action_to_hvac = MagicMock()
 
-        self.app.take_action(17)  # Simulate temperature below T_MIN
+        self.app.take_action(17)
 
         self.app.send_action_to_hvac.assert_called_once_with("TurnOnHeater")
 
@@ -36,23 +36,22 @@ class TestUnitaire(unittest.TestCase):
         # Test pour temperature dans le range acceptable
         self.app.send_action_to_hvac = MagicMock()
 
-        self.app.take_action(25)  # Simulate temperature within range
+        self.app.take_action(25)
 
         self.app.send_action_to_hvac.assert_not_called()
 
 class TestIntegration(unittest.TestCase):
     def setUp(self):
-        # Setup in-memory SQLite database for testing
         self.engine = create_engine("sqlite:///:memory:")
         Base.metadata.create_all(self.engine)
         self.SessionLocal = sessionmaker(bind=self.engine)
 
-        # Initialize App with the test database
+        # Initialise App
         self.app = App()
         self.app.SessionLocal = self.SessionLocal
 
     def test_save_event_to_database(self):
-        # Simulate the timestamp as a string in the expected format
+        # Simuler timestamp dans le bon format
         edt = pytz.timezone("US/Eastern")
         timestamp = datetime.now().astimezone(edt).strftime("%Y-%m-%d %H:%M:%S")
         temperature = "28.5"
