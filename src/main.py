@@ -122,15 +122,11 @@ class App:
             # Convert timestamp to the correct timezone
             edt = pytz.timezone("US/Eastern")
 
-            # Check if timestamp is a string and convert it to datetime if necessary
-            if isinstance(timestamp, str):
-                timestamp_temp = datetime.strptime(
-                    timestamp, "%Y-%m-%d %H:%M:%S"
-                ).astimezone(edt)
-            elif isinstance(timestamp, datetime):
-                timestamp_temp = timestamp.astimezone(edt)
-            else:
-                raise ValueError("Invalid timestamp format")
+            timestamp_str = (
+                parse_date(timestamp).astimezone(edt).strftime("%Y-%m-%d %H:%M:%S")
+            )
+            
+            timestamp_temp = datetime.strptime(timestamp_str, "%Y-%m-%d %H:%M:%S")
 
             timestamp_events = datetime.now().astimezone(edt)
 
