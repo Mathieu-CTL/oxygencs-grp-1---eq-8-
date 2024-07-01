@@ -124,7 +124,9 @@ class App:
 
             # Check if timestamp is a string and convert it to datetime if necessary
             if isinstance(timestamp, str):
-                timestamp_temp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").astimezone(edt)
+                timestamp_temp = datetime.strptime(
+                    timestamp, "%Y-%m-%d %H:%M:%S"
+                ).astimezone(edt)
             elif isinstance(timestamp, datetime):
                 timestamp_temp = timestamp.astimezone(edt)
             else:
@@ -142,7 +144,9 @@ class App:
             if float(temperature) >= float(self.T_MAX):
                 event_record = HVAC_Events(timestamp=timestamp_events, event="TurnOnAc")
             elif float(temperature) <= float(self.T_MIN):
-                event_record = HVAC_Events(timestamp=timestamp_events, event="TurnOnHeater")
+                event_record = HVAC_Events(
+                    timestamp=timestamp_events, event="TurnOnHeater"
+                )
             else:
                 event_record = HVAC_Events(timestamp=timestamp_events, event="NoAction")
             session.add(event_record)
