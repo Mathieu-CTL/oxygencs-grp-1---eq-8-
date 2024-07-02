@@ -21,41 +21,41 @@ jobs:
 
   linting-and-formatting:
      runs-on: ubuntu-latest
-      
+
      steps:
      - name: Checkout code
        uses: actions/checkout@v2
-      
+
      - name: Set up Python
        uses: actions/setup-python@v2
        with:
         python-version: '3.8'
-      
+
      - name: Install dependencies
        run: |
         python -m pip install --upgrade pip
         pip install flake8 black
-      
+
      - name: Run linting
        continue-on-error: true
        run: flake8 src
-      
+
      - name: Format with black in check mode
        continue-on-error: true
        run: black --check src
-      
+
      - name: Format with black in format mode
        run: black src
 
   build-and-deploy:
-            
+
     runs-on: ubuntu-latest
 
      # Docker Hub tag
     env:
        IMAGE_NAME: oxygencs
        IMAGE_VERSION: latest
-      
+
     steps:
     - uses: actions/checkout@v3
     - name: Log in to DockerHub
@@ -65,16 +65,14 @@ jobs:
       run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
           echo "${{secrets.DOCKER_HUB_USERNAME}}/$IMAGE_NAME:$IMAGE_VERSION"
-      
+
     - name: Build Docker image
       run: |
         docker build . --file Dockerfile --tag ${{secrets.DOCKER_HUB_USERNAME}}/$IMAGE_NAME:$IMAGE_VERSION
         docker build . --file Dockerfile --tag ${{secrets.DOCKER_HUB_USERNAME}}/$IMAGE_NAME:${{ github.run_id }}
 
     - name: Deploy Docker image with latest tag
-      run: docker push ${{secrets.DOCKER_HUB_USERNAME}}/$IMAGE_NAME:$IMAGE_VERSION  
-      
+      run: docker push ${{secrets.DOCKER_HUB_USERNAME}}/$IMAGE_NAME:$IMAGE_VERSION
+
     - name: Deploy Docker image with unique tag
       run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/$IMAGE_NAME:${{ github.run_id }}
-      
-        
