@@ -17,7 +17,7 @@ assignees: ''
 [Any assumptions that apply to the test.]
 
 ## Test Steps
-[The test steps should include the data and information on how to execute the test. 
+[The test steps should include the data and information on how to execute the test.
 This is perhaps the most important part of a test case.
 Keep this section clear and concise (a list would be fine), but don’t leave out any necessary details.]
 
