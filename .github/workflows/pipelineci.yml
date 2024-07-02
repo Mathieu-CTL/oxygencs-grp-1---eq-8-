@@ -76,3 +76,4 @@ jobs:
 
     - name: Deploy Docker image with unique tag
       run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/$IMAGE_NAME:${{ github.run_id }}
+      
