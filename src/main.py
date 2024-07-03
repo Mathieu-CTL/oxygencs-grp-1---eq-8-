@@ -109,7 +109,8 @@ class App:
             )
             .build()
         )
-        self._hub_connection.on("ReceiveSensorData", self.on_sensor_data_received)
+        self._hub_connection.on("ReceiveSensorData",
+                                self.on_sensor_data_received)
         self._hub_connection.on_open(lambda: print("||| Connection opened."))
         self._hub_connection.on_close(lambda: print("||| Connection closed."))
         self._hub_connection.on_error(
@@ -171,10 +172,12 @@ class App:
             edt = pytz.timezone("US/Eastern")
 
             timestamp_str = (
-                parse_date(timestamp).astimezone(edt).strftime("%Y-%m-%d %H:%M:%S")
+                parse_date(timestamp).astimezone(edt).strftime(
+                    "%Y-%m-%d %H:%M:%S")
             )
 
-            timestamp_temp = datetime.strptime(timestamp_str, "%Y-%m-%d %H:%M:%S")
+            timestamp_temp = datetime.strptime(timestamp_str,
+                                               "%Y-%m-%d %H:%M:%S")
 
             timestamp_events = datetime.now().astimezone(edt)
 
@@ -186,13 +189,15 @@ class App:
 
             # Save event data (Table "HVAC_Events")
             if float(temperature) >= float(self.t_max):
-                event_record = HvacEvents(timestamp=timestamp_events, event="TurnOnAc")
+                event_record = HvacEvents(timestamp=timestamp_events,
+                                          event="TurnOnAc")
             elif float(temperature) <= float(self.t_min):
                 event_record = HvacEvents(
                     timestamp=timestamp_events, event="TurnOnHeater"
                 )
             else:
-                event_record = HvacEvents(timestamp=timestamp_events, event="NoAction")
+                event_record = HvacEvents(timestamp=timestamp_events,
+                                          event="NoAction")
             session.add(event_record)
 
             # Commit the transaction
