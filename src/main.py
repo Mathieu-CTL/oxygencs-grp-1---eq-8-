@@ -7,12 +7,10 @@ import logging
 import json
 import time
 import os
-from dotenv import load_dotenv
 from datetime import datetime
 
 import pytz
 from dateutil.parser import parse as parse_date
-from dotenv import load_dotenv
 from signalrcore.hub_connection_builder import HubConnectionBuilder
 import requests
 from sqlalchemy import create_engine, Column, Integer, String, DateTime
@@ -20,8 +18,6 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 
 # SQLAlchemy base
 Base = declarative_base()
-
-load_dotenv()
 
 
 class HvacTemperature(Base):
