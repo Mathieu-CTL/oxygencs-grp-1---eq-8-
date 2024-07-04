@@ -2,9 +2,6 @@
 FROM python:3.8-alpine AS builder
 
 # Installer les dépendances de build
-RUN apk add --no-cache gcc musl-dev libffi-dev
-
-# Installer les dépendances de build
 RUN pip install --no-cache-dir pipenv 
 
 # Définir le répertoire de travail
@@ -22,18 +19,14 @@ COPY . .
 # Étape 2: Exécution
 FROM python:3.8-alpine
 
-# Installer runtime dependencies
-RUN apk add --no-cache libpq
-
 # Définir le répertoire de travail
 WORKDIR /app
 
+# Copier uniquement les dépendances installées par pipenv depuis l'étape de construction
+COPY --from=builder /root/.local /root/.local
 
 # Copier le reste de l'application depuis l'étape de construction
 COPY --from=builder /app /app
-
-# Copier le virtualenv
-COPY --from=builder /app/.venv /app/.venv
 
 # Définir le PATH pour inclure les binaires installés par pipenv
 ENV PATH=/root/.local/bin:$PATH
