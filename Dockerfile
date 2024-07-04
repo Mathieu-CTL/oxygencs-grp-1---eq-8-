@@ -14,7 +14,6 @@ COPY Pipfile Pipfile.lock ./
 
 # Installer les dépendances avec pipenv
 RUN pipenv install --deploy --ignore-pipfile
-RUN pipenv install pytz
 
 # Étape finale
 FROM python:3.8-alpine
@@ -25,7 +24,7 @@ RUN pip install --no-cache-dir pipenv
 WORKDIR /app
 
 # Copier les dépendances installées depuis l'étape de construction
-# COPY --from=builder /root/.local /root/.local
+COPY --from=builder /root/.local /root/.local
 
 # Copier les fichiers de l'application depuis l'étape de construction
 COPY . .
