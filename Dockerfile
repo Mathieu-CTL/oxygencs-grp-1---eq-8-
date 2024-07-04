@@ -1,15 +1,14 @@
 # Étape de construction
-FROM python:3.8-slim as builder
+FROM python:3.8-alpine as builder
 
 # Installer les dépendances nécessaires pour la compilation et pipenv
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apk add --no-cache \
         gcc \
-        python3-dev \
+        musl-dev \
         libffi-dev \
-        build-essential \
-    && pip install --no-cache-dir pipenv \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+        python3-dev \
+        build-base \
+    && pip install --no-cache-dir pipenv
 
 WORKDIR /app
 
@@ -20,14 +19,19 @@ COPY Pipfile Pipfile.lock ./
 RUN pipenv install --deploy --ignore-pipfile
 
 # Étape finale
-FROM python:3.8-slim
+FROM python:3.8-alpine
 
 WORKDIR /app
+
+# Installer pip sans cache et nettoyer le cache apk
+RUN apk add --no-cache libffi-dev \
+    && pip install --no-cache-dir pipenv \
+    && rm -rf /var/cache/apk/*
 
 # Copier les dépendances installées depuis l'étape de construction
 COPY --from=builder /app /app
 
-# Copier les fichiers de l'application depuis l'étape de construction
+# Copier les fichiers de l'application
 COPY . .
 
 # Ajouter le dossier des binaires locaux au PATH
