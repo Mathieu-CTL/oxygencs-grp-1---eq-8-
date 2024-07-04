@@ -32,4 +32,6 @@ COPY . .
 # Ajouter le dossier des binaires locaux au PATH
 ENV PATH=/root/.local/bin:$PATH
 
+RUN pip list
+
 CMD ["pipenv", "run", "start"]
