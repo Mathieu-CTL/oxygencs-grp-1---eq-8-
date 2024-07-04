@@ -76,8 +76,8 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build . --file Dockerfile --tag ${{secrets.DOCKER_USERNAME}}/$IMAGE_NAME:$IMAGE_VERSION
-        docker build . --file Dockerfile --tag ${{secrets.DOCKER_USERNAME}}/$IMAGE_NAME:${{ github.run_id }}
+        docker build -t ${{secrets.DOCKER_USERNAME}}/$IMAGE_NAME:$IMAGE_VERSION .
+        docker build -t ${{secrets.DOCKER_USERNAME}}/$IMAGE_NAME:${{ github.run_id }} .
 
     - name: Deploy Docker image with latest tag
       run: docker push ${{secrets.DOCKER_USERNAME}}/$IMAGE_NAME:$IMAGE_VERSION
