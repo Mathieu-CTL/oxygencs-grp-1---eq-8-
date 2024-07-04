@@ -1,3 +1,21 @@
+# Étape de construction
+FROM python:3.8-alpine as builder
+
+# Installer les dépendances nécessaires pour la compilation
+RUN apk add --no-cache gcc musl-dev libffi-dev
+
+# Installer pipenv
+RUN pip install --no-cache-dir pipenv
+
+WORKDIR /app
+
+# Copier les fichiers Pipfile et Pipfile.lock pour installer les dépendances
+COPY Pipfile Pipfile.lock ./
+
+# Installer les dépendances avec pipenv
+RUN pipenv install --deploy --ignore-pipfile
+RUN pipenv install pytz
+
 # Étape finale
 FROM python:3.8-alpine
 
@@ -7,10 +25,7 @@ RUN pip install --no-cache-dir pipenv
 WORKDIR /app
 
 # Copier les dépendances installées depuis l'étape de construction
-COPY --from=builder /root/.local /root/.local
-
-# Installer pytz dans l'environnement virtuel final
-RUN pipenv install pytz
+# COPY --from=builder /root/.local /root/.local
 
 # Copier les fichiers de l'application depuis l'étape de construction
 COPY . .
