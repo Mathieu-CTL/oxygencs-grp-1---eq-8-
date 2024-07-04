@@ -1,8 +1,8 @@
 # Étape de construction
-FROM python:3.8-slim as builder
+FROM python:3.8-alpine as builder
 
 # Installer les dépendances nécessaires pour la compilation
-RUN apt-get update && apt-get install -y gcc libffi-dev musl-dev
+RUN apk add --no-cache gcc musl-dev libffi-dev
 
 # Installer pipenv
 RUN pip install --no-cache-dir pipenv
@@ -16,10 +16,10 @@ COPY Pipfile Pipfile.lock ./
 RUN pipenv install --deploy --ignore-pipfile
 
 # Étape finale
-FROM python:3.8-slim
+FROM python:3.8-alpine
 
-# Installer pipenv dans l'image finale
-RUN pip install --no-cache-dir pipenv
+# Installer les bibliothèques nécessaires pour l'exécution
+RUN apk add --no-cache libffi
 
 WORKDIR /app
 
@@ -33,7 +33,7 @@ COPY . .
 ENV PATH=/root/.local/bin:$PATH
 
 # Supprimer les fichiers temporaires et caches pour réduire la taille
-RUN rm -rf /var/cache/apt/* && \
+RUN rm -rf /var/cache/apk/* && \
     rm -rf /root/.cache/pip
 
 CMD ["pipenv", "run", "start"]
