@@ -4,7 +4,8 @@ FROM python:3.8-alpine as builder
 # Installer les dépendances nécessaires pour la compilation
 # Installer pipenv
 RUN apk add --no-cache gcc musl-dev libffi-dev && \
-    pip install --no-cache-dir pipenv
+    pip install --no-cache-dir pipenv && \
+    rm -rf /var/cache/apk/*
 
 WORKDIR /app
 
