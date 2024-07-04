@@ -1,35 +1,30 @@
-# Étape de construction
-FROM python:3.8-alpine as builder
-
-# Installer les dépendances nécessaires pour la compilation
-# Installer pipenv
-RUN apk add --no-cache gcc musl-dev libffi-dev && \
-    pip install --no-cache-dir pipenv && \
-    rm -rf /var/cache/apk/*
-
-WORKDIR /app
-
-# Copier les fichiers Pipfile et Pipfile.lock pour installer les dépendances
-COPY Pipfile Pipfile.lock ./
-
-# Installer les dépendances avec pipenv
-RUN pipenv install --deploy --ignore-pipfile
-
-# Étape finale
 FROM python:3.8-alpine
 
-# Installer pipenv dans l'image finale
-RUN pip install --no-cache-dir pipenv
+# Installer les dépendances de build et les nettoyer après utilisation
+RUN apk add --no-cache \
+        gcc \
+        musl-dev \
+        libffi-dev \
+        openssl-dev \
+        libxslt-dev \
+        libxml2-dev \
+    && pip install --no-cache-dir pipenv \
+    && rm -rf /var/cache/apk/*
 
+# Définir le répertoire de travail
 WORKDIR /app
 
-# Copier les dépendances installées depuis l'étape de construction
-COPY --from=builder /root/.local /root/.local
+# Copier les fichiers de configuration de Pipenv
+COPY Pipfile Pipfile.lock ./
 
-# Copier les fichiers de l'application depuis l'étape de construction
+# Installer les dépendances de l'application
+RUN pipenv install --deploy --ignore-pipfile
+
+# Copier le reste de l'application
 COPY . .
 
-# Ajouter le dossier des binaires locaux au PATH
+# Définir le PATH pour inclure les binaires installés par pipenv
 ENV PATH=/root/.local/bin:$PATH
 
+# Définir la commande par défaut pour exécuter l'application
 CMD ["pipenv", "run", "start"]
