@@ -2,6 +2,9 @@
 FROM python:3.8-alpine AS builder
 
 # Installer les dépendances de build
+RUN apk add --no-cache gcc musl-dev libffi-dev
+
+# Installer les dépendances de build
 RUN pip install --no-cache-dir pipenv 
 
 # Définir le répertoire de travail
@@ -18,6 +21,9 @@ COPY . .
 
 # Étape 2: Exécution
 FROM python:3.8-alpine
+
+# Installer runtime dependencies
+RUN apk add --no-cache libpq
 
 # Définir le répertoire de travail
 WORKDIR /app
