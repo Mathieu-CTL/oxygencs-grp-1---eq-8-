@@ -1,37 +1,35 @@
-# Stage 1: Build stage
+# Étape de construction
 FROM python:3.8-alpine as builder
 
-# Install dependencies needed for compilation
+# Installer les dépendances nécessaires pour la compilation
 RUN apk add --no-cache gcc musl-dev libffi-dev
 
-# Install pipenv
+# Installer pipenv
 RUN pip install --no-cache-dir pipenv
 
 WORKDIR /app
 
-# Copy Pipfile and Pipfile.lock to install dependencies
+# Copier les fichiers Pipfile et Pipfile.lock pour installer les dépendances
 COPY Pipfile Pipfile.lock ./
 
-# Install dependencies with pipenv
+# Installer les dépendances avec pipenv
 RUN pipenv install --deploy --ignore-pipfile
 
-# Stage 2: Production stage
+# Étape finale
 FROM python:3.8-alpine
 
-# Install pipenv in the final image
+# Installer pipenv dans l'image finale
 RUN pip install --no-cache-dir pipenv
 
 WORKDIR /app
 
-# Copy installed dependencies from the builder stage
+# Copier les dépendances installées depuis l'étape de construction
 COPY --from=builder /root/.local /root/.local
 
-# Copy application files
+# Copier les fichiers de l'application depuis l'étape de construction
 COPY . .
 
-RUN pip install --no-cache-dir pytz
-
-# Add local binaries folder to PATH
+# Ajouter le dossier des binaires locaux au PATH
 ENV PATH=/root/.local/bin:$PATH
 
 CMD ["pipenv", "run", "start"]
