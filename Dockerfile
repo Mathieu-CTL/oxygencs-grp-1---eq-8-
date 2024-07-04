@@ -32,6 +32,4 @@ COPY . .
 # Ajouter le dossier des binaires locaux au PATH
 ENV PATH=/root/.local/bin:$PATH
 
-EXPOSE 80
-
 CMD ["pipenv", "run", "start"]
