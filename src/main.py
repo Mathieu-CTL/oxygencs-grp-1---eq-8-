@@ -62,8 +62,8 @@ class App:
         self.ticks = 10
 
         # To be configured by your team
-        self.host = os.getenv("HOST", "http://localhost")
-        self.token = os.getenv("TOKEN", "default_token")
+        self.host = os.getenv("HOST")
+        self.token = os.getenv("TOKEN")
         self.t_max = 30
         self.t_min = 18
         self.database_url = os.getenv("DATABASE_URL", "sqlite:///:memory:")

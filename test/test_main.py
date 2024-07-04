@@ -23,8 +23,8 @@ class TestUnitaire(unittest.TestCase):
     def setUp(self):
         """Set up the test environment."""
         self.app = App()
-        self.app.host = "http://localhost"
-        self.app.token = "test_token"
+        self.app.host = os.getenv("HOST")
+        self.app.token = os.getenv("TOKEN")
         self.app.database_url = "sqlite:///:memory:"
 
     def test_take_action_turn_on_ac(self):
