@@ -34,7 +34,8 @@ jobs:
         pipenv install --dev --skip-lock
         
     - name: Run Integration tests
-      run: pytest
+      run: |
+        pipenv run pytest
 
   linting-and-formatting:
      runs-on: ubuntu-latest
