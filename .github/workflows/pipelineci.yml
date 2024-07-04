@@ -66,19 +66,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
-    - name: Decrypt .env file
+    
       env:
-        ENCRYPTED_ENV_FILE: encrypted_env_file.enc
-        ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
-        ENCRYPTION_IV: ${{ secrets.ENCRYPTION_IV }}
-      run: |
-        openssl aes-256-cbc -K $ENCRYPTION_KEY -iv $ENCRYPTION_IV -in $ENCRYPTED_ENV_FILE -out .env -d
+        DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
+        DOCKER_PASSWORD: ${{secrets.DOCKER_TOKEN}}
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        HOST: ${{ secrets.HOST }}
+        TOKEN: ${{ secrets.TOKEN }}
 
     - name: Log in to DockerHub
-      env:
-          DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
-          DOCKER_PASSWORD: ${{secrets.DOCKER_TOKEN}}
       run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
           echo "${{secrets.DOCKER_USERNAME}}/$IMAGE_NAME:$IMAGE_VERSION"
