@@ -11,6 +11,7 @@ python-dotenv = "*"
 pytz = "*"
 python-dateutil = "*"
 psycopg2-binary = "*"
+pytest = "*"
 
 [dev-packages]
 
