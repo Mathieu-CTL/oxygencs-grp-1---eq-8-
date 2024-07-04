@@ -29,8 +29,7 @@ COPY --from=builder /root/.local /root/.local
 # Copy application files
 COPY . .
 
-# Install pytz specifically for production
-RUN pipenv install --deploy --system --skip-lock pytz
+RUN pip install --no-cache-dir pytz
 
 # Add local binaries folder to PATH
 ENV PATH=/root/.local/bin:$PATH
