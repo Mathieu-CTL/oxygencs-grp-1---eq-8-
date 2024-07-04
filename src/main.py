@@ -15,6 +15,7 @@ from signalrcore.hub_connection_builder import HubConnectionBuilder
 import requests
 from sqlalchemy import create_engine, Column, Integer, String, DateTime
 from sqlalchemy.orm import declarative_base, sessionmaker
+from dotenv import load_dotenv
 
 # SQLAlchemy base
 Base = declarative_base()
