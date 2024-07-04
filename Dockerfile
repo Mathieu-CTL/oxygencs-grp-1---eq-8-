@@ -2,14 +2,7 @@
 FROM python:3.8-alpine AS builder
 
 # Installer les dépendances de build
-RUN apk add --no-cache \
-        gcc \
-        musl-dev \
-        libffi-dev \
-        openssl-dev \
-        libxslt-dev \
-        libxml2-dev \
-    && pip install --no-cache-dir pipenv
+RUN pip install --no-cache-dir pipenv 
 
 # Définir le répertoire de travail
 WORKDIR /app
