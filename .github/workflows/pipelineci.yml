@@ -73,9 +73,6 @@ jobs:
        IMAGE_VERSION: latest
        DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
        DOCKER_PASSWORD: ${{secrets.DOCKER_TOKEN}}
-       DATABASE_URL: ${{ secrets.DATABASE_URL }}
-       HOST: ${{ secrets.HOST }}
-       TOKEN: ${{ secrets.TOKEN }}
 
     steps:
     - uses: actions/checkout@v3
