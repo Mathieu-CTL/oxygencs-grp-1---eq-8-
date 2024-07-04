@@ -66,7 +66,7 @@ class App:
         self.token = os.getenv("TOKEN")
         self.t_max = 30
         self.t_min = 18
-        self.database_url = os.getenv("DATABASE_URL", "sqlite:///:memory:")
+        self.database_url = os.getenv("DATABASE_URL")
 
         # Initialize database connection
         self.engine = create_engine(self.database_url)
