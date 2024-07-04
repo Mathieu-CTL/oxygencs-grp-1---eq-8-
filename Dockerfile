@@ -1,5 +1,5 @@
 # Étape 1: Construction
-FROM python:3.8-alpine AS builder
+FROM python:3.8-slim AS builder
 
 # Installer les dépendances de build
 RUN apk add --no-cache \
@@ -24,7 +24,7 @@ RUN pipenv install --deploy --ignore-pipfile
 COPY . .
 
 # Étape 2: Exécution
-FROM python:3.8-alpine
+FROM python:3.8-slim
 
 # Définir le répertoire de travail
 WORKDIR /app
