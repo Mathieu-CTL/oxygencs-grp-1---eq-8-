@@ -1,11 +1,12 @@
 # Étape de construction
 FROM python:3.8-alpine as builder
 
-# Installer les dépendances nécessaires pour la compilation
-# Installer pipenv
-RUN apk add --no-cache gcc musl-dev libffi-dev && \
-    pip install --no-cache-dir pipenv && \
-    rm -rf /var/cache/apk/*
+# Installer les dépendances nécessaires pour la compilation et pipenv
+RUN apk add --no-cache \
+        gcc \
+        musl-dev \
+        libffi-dev && \
+    pip install --no-cache-dir pipenv
 
 WORKDIR /app
 
@@ -18,10 +19,11 @@ RUN pipenv install --deploy --ignore-pipfile
 # Étape finale
 FROM python:3.8-alpine
 
-# Installer pipenv dans l'image finale
-RUN pip install --no-cache-dir pipenv
-
 WORKDIR /app
+
+# Installer pipenv dans l'image finale et nettoyer le cache apk
+RUN pip install --no-cache-dir pipenv \
+    && rm -rf /var/cache/apk/*
 
 # Copier les dépendances installées depuis l'étape de construction
 COPY --from=builder /root/.local /root/.local

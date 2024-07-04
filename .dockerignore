@@ -1,3 +1,9 @@
 test.txt
 *.md
-!readme.md
+README.md
+test/
+.github/
+.pytest_cache/
+pytest.ini
+requirements.txt
+env_file.enc

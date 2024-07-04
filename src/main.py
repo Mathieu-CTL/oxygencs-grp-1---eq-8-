@@ -20,7 +20,6 @@ from dotenv import load_dotenv
 # SQLAlchemy base
 Base = declarative_base()
 
-
 class HvacTemperature(Base):
     """
     SQLAlchemy model for HVAC temperature data.
