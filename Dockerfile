@@ -6,7 +6,6 @@ WORKDIR /app
 
 COPY Pipfile Pipfile.lock ./
 COPY --from=builder /root/.local /root/.local
-COPY --from=builder /app /app
 COPY . .
 
 # Installer les dépendances de l'application
