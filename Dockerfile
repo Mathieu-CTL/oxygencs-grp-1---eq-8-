@@ -2,24 +2,24 @@
 FROM python:3.8-alpine as builder
 
 # Installer les dépendances nécessaires pour la compilation
-RUN apk add --no-cache gcc musl-dev libffi-dev
+# RUN apk add --no-cache gcc musl-dev libffi-dev
 
 # Installer pipenv
-RUN pip install --no-cache-dir pipenv
+# RUN pip install --no-cache-dir pipenv
 
 WORKDIR /app
 
 # Copier les fichiers Pipfile et Pipfile.lock pour installer les dépendances
 COPY Pipfile Pipfile.lock ./
 
-# Installer les dépendances avec pipenv sans --skip-lock
-RUN pipenv install --deploy
+# Installer les dépendances avec pipenv
+RUN pipenv install --deploy --ignore-pipfile
 
 # Étape finale
 FROM python:3.8-alpine
 
 # Installer pipenv dans l'image finale
-RUN pip install --no-cache-dir pipenv
+# RUN pip install --no-cache-dir pipenv
 
 WORKDIR /app
 
