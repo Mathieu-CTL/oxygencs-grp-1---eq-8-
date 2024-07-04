@@ -32,10 +32,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install pipenv
         pipenv install --dev --skip-lock
-
-    - name: Verify installed packages
-      run: |
-        pipenv run pip list
+        pipenv install pytz
         
     - name: Run Integration tests
       run: |
