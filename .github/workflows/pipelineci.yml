@@ -10,11 +10,6 @@ jobs:
   tests:
     runs-on: ubuntu-latest
 
-    env:
-       DATABASE_URL: ${{ secrets.DATABASE_URL }}
-       TOKEN: ${{ secrets.TOKEN }}
-       HOST: ${{ secrets.HOST }}
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -68,12 +63,18 @@ jobs:
     env:
        IMAGE_NAME: oxygencs
        IMAGE_VERSION: latest
-       DATABASE_URL: ${{ secrets.DATABASE_URL }}
-       TOKEN: ${{ secrets.TOKEN }}
-       HOST: ${{ secrets.HOST }}
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Decrypt .env file
+      env:
+        ENCRYPTED_ENV_FILE: encrypted_env_file.enc
+        ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+        ENCRYPTION_IV: ${{ secrets.ENCRYPTION_IV }}
+      run: |
+        openssl aes-256-cbc -K $ENCRYPTION_KEY -iv $ENCRYPTION_IV -in $ENCRYPTED_ENV_FILE -out .env -d
+
     - name: Log in to DockerHub
       env:
           DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
