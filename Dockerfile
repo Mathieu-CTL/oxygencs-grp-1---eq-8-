@@ -1,35 +1,26 @@
-# Étape de construction
-FROM python:3.8-alpine as builder
+# Utiliser l'image alpine de Python 3.8
+FROM python:3.8-alpine
 
-# Installer les dépendances nécessaires pour la compilation
-RUN apk add --no-cache gcc musl-dev libffi-dev
+# Installer les dépendances nécessaires pour l'application
+RUN apk add --no-cache \
+    gcc \
+    musl-dev \
+    libffi-dev
 
-# Installer pipenv
-RUN pip install --no-cache-dir pipenv
-
+# Créer le répertoire de travail pour l'application
 WORKDIR /app
 
-# Copier les fichiers Pipfile et Pipfile.lock pour installer les dépendances
+# Copier les fichiers Pipfile et Pipfile.lock
 COPY Pipfile Pipfile.lock ./
 
 # Installer les dépendances avec pipenv
 RUN pipenv install --deploy --ignore-pipfile
 
-# Étape finale
-FROM python:3.8-alpine
-
-# Installer pipenv dans l'image finale
-RUN pip install --no-cache-dir pipenv
-
-WORKDIR /app
-
-# Copier les dépendances installées depuis l'étape de construction
-COPY --from=builder /root/.local /root/.local
-
-# Copier les fichiers de l'application depuis l'étape de construction
+# Copier les fichiers de l'application
 COPY . .
 
 # Ajouter le dossier des binaires locaux au PATH
-ENV PATH=/root/.local/bin:$PATH
+ENV PATH="/root/.local/bin:${PATH}"
 
+# Commande par défaut pour exécuter l'application avec pipenv
 CMD ["pipenv", "run", "start"]
