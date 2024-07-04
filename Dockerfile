@@ -13,7 +13,7 @@ WORKDIR /app
 COPY Pipfile Pipfile.lock ./
 
 # Installer les dépendances avec pipenv
-RUN pipenv install --deploy --ignore-pipfile
+# RUN pipenv install --deploy --ignore-pipfile
 
 # Étape finale
 FROM python:3.8-alpine
@@ -24,7 +24,7 @@ FROM python:3.8-alpine
 WORKDIR /app
 
 # Copier les dépendances installées depuis l'étape de construction
-COPY --from=builder /root/.local /root/.local
+# COPY --from=builder /root/.local /root/.local
 
 # Copier les fichiers de l'application depuis l'étape de construction
 COPY . .
