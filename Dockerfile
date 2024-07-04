@@ -22,6 +22,9 @@ FROM python:3.8-alpine
 # Définir le répertoire de travail
 WORKDIR /app
 
+# Copier uniquement les dépendances installées par pipenv depuis l'étape de construction
+COPY --from=builder /root/.local /root/.local
+
 # Copier le reste de l'application depuis l'étape de construction
 COPY --from=builder /app /app
 
