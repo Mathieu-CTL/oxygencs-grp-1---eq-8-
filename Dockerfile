@@ -1,16 +1,20 @@
 # Étape 1: Construction
 FROM python:3.8-alpine AS builder
 
-# Installer les dépendances de build et pipenv, définir le répertoire de travail, copier les fichiers de Pipenv, installer les dépendances et copier le reste de l'application
-RUN apk add --no-cache gcc musl-dev libffi-dev postgresql-dev \
-    && pip install --no-cache-dir pipenv \
-    && mkdir /app \
-    && cd /app \
-    && cp /Pipfile /Pipfile.lock ./ \
-    && pipenv install --deploy --ignore-pipfile
+# Installer les dépendances de build
+RUN pip install --no-cache-dir pipenv 
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier les fichiers de configuration de Pipenv
+COPY Pipfile Pipfile.lock ./
+
+# Installer les dépendances de l'application
+RUN pipenv install --deploy --ignore-pipfile
 
 # Copier le reste de l'application
-COPY . /app
+COPY . .
 
 # Étape 2: Exécution
 FROM python:3.8-alpine
