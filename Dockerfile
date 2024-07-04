@@ -8,6 +8,8 @@ RUN apk add --no-cache \
         libffi-dev \
         python3-dev \
         build-base \
+        openssl-dev \
+        libressl-dev \
     && pip install --no-cache-dir pipenv
 
 WORKDIR /app
@@ -23,18 +25,16 @@ FROM python:3.8-alpine
 
 WORKDIR /app
 
-# Installer pip sans cache et nettoyer le cache apk
-RUN apk add --no-cache libffi-dev \
-    && pip install --no-cache-dir pipenv \
-    && rm -rf /var/cache/apk/*
+# Installer les dépendances nécessaires pour l'exécution
+RUN apk add --no-cache libffi-dev openssl-dev
 
-# Copier les dépendances installées depuis l'étape de construction
-COPY --from=builder /app /app
+# Copier l'environnement virtuel créé dans l'étape de construction
+COPY --from=builder /app/.venv /app/.venv
 
 # Copier les fichiers de l'application
 COPY . .
 
 # Ajouter le dossier des binaires locaux au PATH
-ENV PATH=/app/.venv/bin:$PATH
+ENV PATH="/app/.venv/bin:$PATH"
 
 CMD ["pipenv", "run", "start"]
