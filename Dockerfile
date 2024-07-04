@@ -1,13 +1,6 @@
 # Étape 1: Construction
 FROM python:3.8-alpine AS builder
 
-
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PIP_DEFAULT_TIMEOUT=100 \
- PYTHONUNBUFFERED=1 \
- PIP_DISABLE_PIP_VERSION_CHECK=1 \
- PIP_NO_CACHE_DIR=1
-
 # Installer les dépendances de build
 RUN pip install --no-cache-dir pipenv 
 
