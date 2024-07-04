@@ -67,7 +67,7 @@ jobs:
        run: black src
 
   build-and-deploy:
-    # needs: tests 
+    needs: tests
     runs-on: ubuntu-latest
 
      # Docker Hub tag
@@ -104,4 +104,3 @@ jobs:
 
     - name: Deploy Docker image with unique tag
       run: docker push ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:${{ github.run_id }}
-
