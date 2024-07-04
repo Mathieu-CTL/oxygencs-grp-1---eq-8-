@@ -76,7 +76,7 @@ jobs:
 
     - name: Log in to DockerHub
       run: |
-          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+          docker login -u $DOCKER_USER --password-stdin $DOCKER_PASSWORD
           echo "${{secrets.DOCKER_USERNAME}}/$IMAGE_NAME:$IMAGE_VERSION"
 
     - name: Build Docker image
