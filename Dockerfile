@@ -24,7 +24,7 @@ RUN pip install --no-cache-dir pipenv
 WORKDIR /app
 
 # Copier les dépendances installées depuis l'étape de construction
-COPY --from=builder /root/.local /root/.local
+# COPY --from=builder /root/.local /root/.local
 
 # Copier les fichiers de l'application depuis l'étape de construction
 COPY . .
