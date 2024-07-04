@@ -25,7 +25,7 @@ class TestUnitaire(unittest.TestCase):
         self.app = App()
         self.app.host = os.getenv("HOST")
         self.app.token = os.getenv("TOKEN")
-        self.app.database_url = "sqlite:///:memory:"
+        self.app.database_url = os.getenv("DATABASE_URL")
 
     def test_take_action_turn_on_ac(self):
         """Test if AC is turned on when temperature is above T_MAX."""

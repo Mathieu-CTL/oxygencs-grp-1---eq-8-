@@ -10,6 +10,11 @@ jobs:
   tests:
     runs-on: ubuntu-latest
 
+    env:
+       DATABASE_URL: ${{ secrets.DATABASE_URL }}
+       TOKEN: ${{ secrets.TOKEN }}
+       HOST: ${{ secrets.HOST }}
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -63,6 +68,9 @@ jobs:
     env:
        IMAGE_NAME: oxygencs
        IMAGE_VERSION: latest
+       DATABASE_URL: ${{ secrets.DATABASE_URL }}
+       TOKEN: ${{ secrets.TOKEN }}
+       HOST: ${{ secrets.HOST }}
 
     steps:
     - uses: actions/checkout@v3
