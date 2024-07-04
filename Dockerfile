@@ -32,6 +32,9 @@ WORKDIR /app
 # Copier le reste de l'application depuis l'étape de construction
 COPY --from=builder /app /app
 
+# Copier le virtualenv
+COPY --from=builder /app/.venv /app/.venv
+
 # Définir le PATH pour inclure les binaires installés par pipenv
 ENV PATH=/root/.local/bin:$PATH
 
