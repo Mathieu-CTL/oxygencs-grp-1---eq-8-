@@ -62,8 +62,8 @@ class App:
 
         self.host = os.getenv("HOST")
         self.token = os.getenv("TOKEN")
-        self.t_max = 30
-        self.t_min = 18
+        self.t_max = int(os.getenv("T_MAX"))
+        self.t_min = int(os.getenv("T_MIN"))
         self.database_url = os.getenv("DATABASE_URL")
 
         # Initialize database connection
