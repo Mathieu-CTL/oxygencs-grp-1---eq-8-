@@ -2,7 +2,12 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+      - '**'
+  pull_request:
+    branches:
+      - '**'
 
 jobs:
   tests:
@@ -65,6 +70,7 @@ jobs:
 
   build-and-deploy:
     needs: tests
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
      # Docker Hub tag
