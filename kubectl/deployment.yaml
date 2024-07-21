@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oxygencs-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: oxygencs
+  template:
+    metadata:
+      labels:
+        app: oxygencs
+    spec:
+      containers:
+      - name: oxygencs-container
+        image: log680equipe8/oxygencs:latest:latest
+        env:
+        - name: HOST
+          valueFrom:
+            configMapKeyRef:
+              name: oxygencs-config
+              key: HOST
+        - name: DOCKER_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: oxygencs-config
+              key: DOCKER_USERNAME
+        - name: TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: oxygencs-secret
+              key: TOKEN
+        - name: DOCKER_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: oxygencs-secret
+              key: DOCKER_TOKEN
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: oxygencs-secret
+              key: DATABASE_URL
+        - name: T_MAX
+          valueFrom:
+            secretKeyRef:
+              name: oxygencs-secret
+              key: T_MAX
+        - name: T_MIN
+          valueFrom:
+            secretKeyRef:
+              name: oxygencs-secret
+              key: T_MIN
+        - name: ENCRYPTION_IV
+          valueFrom:
+            secretKeyRef:
+              name: oxygencs-secret
+              key: ENCRYPTION_IV
+        - name: ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: oxygencs-secret
+              key: ENCRYPTION_KEY

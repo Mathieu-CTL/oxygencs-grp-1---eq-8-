@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oxygencs-config
+data:
+  HOST: "http://159.203.50.162"
+  DOCKER_USERNAME: "log680equipe8"
