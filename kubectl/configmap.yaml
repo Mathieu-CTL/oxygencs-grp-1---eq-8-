@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: oxygencs-config
+  namespace: grp01eq8-namespace
 data:
   HOST: "http://159.203.50.162"
   DOCKER_USERNAME: "log680equipe8"

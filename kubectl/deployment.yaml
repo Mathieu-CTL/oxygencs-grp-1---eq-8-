@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: oxygencs-deployment
+  namespace: grp01eq8-namespace
 spec:
   replicas: 3
   selector:
@@ -14,7 +15,7 @@ spec:
     spec:
       containers:
       - name: oxygencs-container
-        image: log680equipe8/oxygencs:latest:latest
+        image: log680equipe8/oxygencs:latest
         env:
         - name: HOST
           valueFrom:
@@ -61,3 +62,10 @@ spec:
             secretKeyRef:
               name: oxygencs-secret
               key: ENCRYPTION_KEY
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
