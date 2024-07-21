@@ -119,3 +119,4 @@ jobs:
         kubectl apply -f kubectl/deployment.yaml
         kubectl apply -f kubectl/service.yaml
         kubectl apply -f kubectl/configmap.yaml
+
