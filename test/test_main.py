@@ -73,14 +73,14 @@ class TestIntegration(unittest.TestCase):
         # Simulate timestamp in the correct format
         edt = pytz.timezone("US/Eastern")
         timestamp = datetime.now().astimezone(edt).strftime("%Y-%m-%d %H:%M:%S")
-        temperature = "28.5"
+        temperature = "22.5"
 
         self.app.save_event_to_database(timestamp, temperature)
 
         session = self.session_local()
         try:
             temp_data = (
-                session.query(HvacTemperature).filter_by(temperature="28.5").first()
+                session.query(HvacTemperature).filter_by(temperature="22.5").first()
             )
             event_data = session.query(HvacEvents).filter_by(event="NoAction").first()
 
