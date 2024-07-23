@@ -128,5 +128,4 @@ jobs:
         kubectl apply -f kubectl/deployment.yaml
         kubectl apply -f kubectl/pod.yaml
         kubectl apply -f kubectl/secret.yaml
-        kubectl apply -f kubectl/service.yaml
 
