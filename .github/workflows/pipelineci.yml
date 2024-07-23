@@ -124,7 +124,9 @@ jobs:
 
     - name: Deploy to Kubernetes
       run: |
-        kubectl apply -f kubectl/deployment.yaml
-        kubectl apply -f kubectl/service.yaml
         kubectl apply -f kubectl/configmap.yaml
+        kubectl apply -f kubectl/deployment.yaml
+        kubectl apply -f kubectl/pod.yaml
+        kubectl apply -f kubectl/secret.yaml
+        kubectl apply -f kubectl/service.yaml
 
