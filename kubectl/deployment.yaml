@@ -64,8 +64,8 @@ spec:
               key: ENCRYPTION_KEY
         resources:
           requests:
-            memory: "512Mi"
-            cpu: "500m"
+            cpu: "250m"
+            memory: "256Mi"
           limits:
-            memory: "512Mi"
-            cpu: "500m"
+            cpu: "250m"
+            memory: "256Mi"
