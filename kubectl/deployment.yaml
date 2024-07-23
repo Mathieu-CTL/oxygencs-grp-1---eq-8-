@@ -4,7 +4,6 @@ metadata:
   name: oxygencs-deployment
   namespace: grp01eq8-namespace
 spec:
-  replicas: 3
   selector:
     matchLabels:
       app: oxygencs
@@ -64,8 +63,8 @@ spec:
               key: ENCRYPTION_KEY
         resources:
           requests:
-            cpu: "250m"
-            memory: "256Mi"
+            cpu: "50m"
+            memory: "64Mi"
           limits:
-            cpu: "250m"
-            memory: "256Mi"
+            cpu: "100m"
+            memory: "128Mi"
