@@ -174,10 +174,6 @@ class App:
 
             timestamp_temp = datetime.strptime(timestamp_str, "%Y-%m-%d %H:%M:%S")
 
-            timestamp_temp_events = datetime.now().astimezone(edt).strftime("%Y-%m-%d %H:%M:%S")
-            
-            timestamp_events = datetime.strptime(timestamp_temp_events, "%Y-%m-%d %H:%M:%S")
-
             # Save temperature data (Table "HVAC_Temperature")
             temp_record = HvacTemperature(
                 timestamp=timestamp_temp, temperature=str(temperature)
@@ -186,13 +182,13 @@ class App:
 
             # Save event data (Table "HVAC_Events")
             if float(temperature) >= float(self.t_max):
-                event_record = HvacEvents(timestamp=timestamp_events, event="TurnOnAc")
+                event_record = HvacEvents(timestamp=timestamp_temp, event="TurnOnAc")
             elif float(temperature) <= float(self.t_min):
                 event_record = HvacEvents(
-                    timestamp=timestamp_events, event="TurnOnHeater"
+                    timestamp=timestamp_temp, event="TurnOnHeater"
                 )
             else:
-                event_record = HvacEvents(timestamp=timestamp_events, event="NoAction")
+                event_record = HvacEvents(timestamp=timestamp_temp, event="NoAction")
             session.add(event_record)
 
             # Commit the transaction
