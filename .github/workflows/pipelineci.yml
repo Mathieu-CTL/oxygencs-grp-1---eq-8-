@@ -124,6 +124,11 @@ jobs:
 
     - name: Deploy to Kubernetes
       run: |
+        kubectl delete deployment oxygencs-deployment -n grp01eq8-namespace
+        kubectl delete pod oxygencs-pod -n grp01eq8-namespace
+        kubectl delete service oxygencs-service -n grp01eq8-namespace
+        kubectl delete configmap oxygencs-config -n grp01eq8-namespace
+        kubectl delete secret oxygencs-secret -n grp01eq8-namespace
         kubectl apply -f kubectl/configmap.yaml
         kubectl apply -f kubectl/deployment.yaml
         kubectl apply -f kubectl/pod.yaml
