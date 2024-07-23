@@ -174,7 +174,7 @@ class App:
 
             timestamp_temp = datetime.strptime(timestamp_str, "%Y-%m-%d %H:%M:%S")
 
-            timestamp_events = datetime.now().astimezone(edt)
+            timestamp_events = datetime.now().astimezone(edt).strftime("%Y-%m-%d %H:%M:%S")
 
             # Save temperature data (Table "HVAC_Temperature")
             temp_record = HvacTemperature(
