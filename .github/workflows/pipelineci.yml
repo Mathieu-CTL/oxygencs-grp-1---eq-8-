@@ -129,3 +129,5 @@ jobs:
         kubectl apply -f kubectl/pod.yaml
         kubectl apply -f kubectl/secret.yaml
 
+    - name: Restart Kubernetes deployment
+      run: kubectl rollout restart deployment metrics-deployment
