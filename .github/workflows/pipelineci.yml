@@ -83,14 +83,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Decrypt .env file
-      env:
-        ENCRYPTED_ENV_FILE: env_file.enc
-        ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
-        ENCRYPTION_IV: ${{ secrets.ENCRYPTION_IV }}
-      run: |
-        openssl aes-256-cbc -d -K $ENCRYPTION_KEY -iv $ENCRYPTION_IV -in $ENCRYPTED_ENV_FILE -out .env
-
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
       with:
@@ -130,4 +122,4 @@ jobs:
         kubectl apply -f kubectl/secret.yaml
 
     - name: Restart Kubernetes deployment
-      run: kubectl rollout restart deployment metrics-deployment
+      run: kubectl rollout restart deployment oxygencs-deployment
